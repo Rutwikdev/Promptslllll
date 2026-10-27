@@ -1,129 +1,274 @@
 DB2 LUW TO POSTGRESQL SCHEMA MIGRATION
-END-TO-END COPILOT PROMPT PLAYBOOK
-==================================
+COPILOT PROMPTS — ONE TASK AT A TIME
+==========================================================
 
 PURPOSE
 -------
-This playbook contains separate copy-paste prompts for the DB2 LUW to PostgreSQL schema migration workflow. Each task includes:
-- WHY: Why the task is needed.
-- WHAT IT DOES: The expected result.
-- COPILOT PROMPT: The exact prompt to paste into Copilot.
+This file contains 53 separate prompts, formatted consistently for copy/paste into Copilot. Run one task at a time and review its output before proceeding.
 
-HOW TO USE
-----------
-1. Open this file in Notepad.
-2. Work through tasks in order, one task at a time.
-3. Replace [SCHEMA_NAME] with the exact DB2 schema name.
-4. Replace [TARGET_SCHEMA] with the approved PostgreSQL target schema when known.
-5. Paste only the prompt for the current task into Copilot.
-6. Review generated SQL before running it in DBeaver.
-7. Save outputs as the filenames suggested in the task.
-8. If a query returns no rows, verify the connection, schema filter, catalog columns, DB2 version, and metadata permissions before concluding that no objects exist.
-9. Do not execute generated PostgreSQL DDL or data-changing commands until reviewed and explicitly approved.
-10. Do not share passwords, tokens, or secrets with Copilot.
+WHAT I EXPECT FROM EACH PROMPT
+------------------------------
+1. Copilot completes only the named task and returns the requested SQL, analysis, proposed definitions, checklist, or report.
+2. Copilot uses the verified DB2 LUW source inventory, approved conversion rules, and confirmed target details.
+3. Copilot does not invent schema names, object definitions, metadata, conversion decisions, or missing evidence.
+4. Copilot flags empty results, unsupported syntax, uncertain conversions, dependencies, and manual-review items instead of silently assuming.
+5. Copilot does not execute SQL or modify either database. Tasks that explicitly require a later approved operation must still stop at the task boundary.
+6. Copilot gives a concise explanation of what was produced and identifies what evidence/output you should save.
+7. Copilot stops after the current task. Do not combine tasks or move to the next task automatically.
 
-GLOBAL SAFETY RULES
--------------------
-- Source DB2 discovery must be read-only.
-- Never modify or delete source DB2 objects.
-- Do not guess database names, schema names, paths, credentials, or object definitions.
-- Use only verified source metadata and approved conversion rules.
-- Mark unknown or ambiguous conversions for manual review.
-- Do not mark tasks complete without evidence.
-- Use a test/non-production PostgreSQL target first.
-- Keep logs, exception reports, validation results, and approval evidence.
-- Verify catalog columns against the installed DB2 LUW version.
+BEFORE USING
+------------
+Replace [SCHEMA_NAME] with the exact DB2 LUW schema, and [TARGET_SCHEMA] with the approved PostgreSQL schema. Do not confuse database names with schema names. Never paste passwords, tokens, or secrets. If a query returns no rows, verify the connection, schema filter, DB2 version, catalog columns, and permissions before concluding that objects are absent.
 
-PHASE 1 — CONNECTION, DISCOVERY, AND SOURCE INVENTORY
-=====================================================
+GLOBAL SAFETY REQUIREMENTS
+--------------------------
+- Keep DB2 source discovery read-only.
+- Do not execute generated SQL or modify database objects unless a later task explicitly calls for it and you separately review and approve it.
+- Use only verified source definitions and approved conversion rules.
+- Respect object dependencies and creation order.
+- Do not generate objects verified as absent from source inventory.
+- Do not invent missing definitions. Flag unknowns for manual review.
+- Keep exception reports and validation evidence.
 
 TASK 1 — Inspect working directory
+----------------------------------
 WHY: Understand the existing project files before creating anything.
 WHAT IT DOES: Lists the current directory and contents without changing files.
-OUTPUT: Directory listing; no file changes.
+EXPECTED OUTPUT: Directory listing; no file changes.
 
-COPILOT PROMPT:
+COPY-PASTE PROMPT:
+
+Task 1: Inspect working directory.
+
 Inspect my current working directory and list the files and folders available for my DB2 LUW to PostgreSQL schema migration project. Do not connect to any database. Do not create, modify, or delete files. Show the current directory and a concise list of its contents, then stop.
 
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
+
 TASK 2 — Verify DB2 connection and version
+------------------------------------------
 WHY: Ensure queries run against the correct DB2 database and version.
 WHAT IT DOES: Helps identify the active database connection and DB2 LUW version.
-OUTPUT: Read-only diagnostic SQL or DBeaver steps.
+EXPECTED OUTPUT: Read-only diagnostic SQL or DBeaver steps.
 
-COPILOT PROMPT:
+COPY-PASTE PROMPT:
+
+Task 2: Verify DB2 connection and version.
+
 I am using DBeaver connected to DB2 LUW. Help me verify the current connection and identify the connected database name and DB2 LUW version. Provide read-only diagnostic SQL or DBeaver steps. Do not assume the database name and schema name are the same. Do not modify anything. Show the steps and stop.
 
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
+
 TASK 3 — Verify source schema
+-----------------------------
 WHY: Avoid running inventory queries against the wrong schema.
 WHAT IT DOES: Verifies the exact schema exists in the connected database.
-OUTPUT: Diagnostic query and interpretation.
+EXPECTED OUTPUT: Diagnostic query and interpretation.
 
-COPILOT PROMPT:
+COPY-PASTE PROMPT:
+
+Task 3: Verify source schema.
+
 I have identified my DB2 LUW schema: [SCHEMA_NAME]. Write a read-only DB2 LUW diagnostic query to verify that this exact schema exists in the currently connected database. Explain how to interpret zero rows. Use catalog columns supported by my DB2 LUW version. Do not modify anything. Show only the SQL and a short explanation, then stop.
 
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
+
 TASK 4 — List all base tables
+-----------------------------
 WHY: Establish the master list so no table is missed.
 WHAT IT DOES: Lists base tables, excluding views and aliases.
-OUTPUT: Save as table_inventory.csv.
+EXPECTED OUTPUT: Save as table_inventory.csv.
 
-COPILOT PROMPT:
+COPY-PASTE PROMPT:
+
+Task 4: List all base tables.
+
 Write one read-only DB2 LUW SQL query to list all base tables in schema [SCHEMA_NAME] using appropriate system catalog views. Return schema name, table name, and table type. Exclude views and aliases. Sort by table name. Do not modify anything. Show only the SQL and a short explanation, then stop.
 
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
+
 TASK 5 — Extract column metadata
+--------------------------------
 WHY: PostgreSQL table definitions must preserve the source columns and their attributes.
 WHAT IT DOES: Extracts data types, lengths, precision, scale, nullability, defaults, and identity details.
-OUTPUT: Save as column_inventory.csv.
+EXPECTED OUTPUT: Save as column_inventory.csv.
 
-COPILOT PROMPT:
+COPY-PASTE PROMPT:
+
+Task 5: Extract column metadata.
+
 Write one read-only DB2 LUW SQL query using SYSCAT.COLUMNS to extract column metadata for all tables in schema [SCHEMA_NAME]. Return schema name, table name, column name, column position, data type, length, numeric precision, scale, nullable status, default value, and identity information where available. Use catalog columns supported by my DB2 LUW version. Sort by table and column position. Do not modify anything. Show only the SQL and a short explanation, then stop.
 
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
+
 TASK 6 — Extract primary keys
+-----------------------------
 WHY: Primary keys define record identity and must be preserved.
 WHAT IT DOES: Lists primary key constraints and ordered key columns.
-OUTPUT: Save as primary_key_inventory.csv.
+EXPECTED OUTPUT: Save as primary_key_inventory.csv.
 
-COPILOT PROMPT:
+COPY-PASTE PROMPT:
+
+Task 6: Extract primary keys.
+
 Write one read-only DB2 LUW SQL query using appropriate catalog views, such as SYSCAT.TABCONST and SYSCAT.KEYCOLUSE, to extract primary key metadata for schema [SCHEMA_NAME]. Return schema, table, constraint name, key column name, and column position. Preserve the order of composite key columns. Use supported catalog columns. Do not modify anything. Show only the SQL and a short explanation, then stop.
 
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
+
 TASK 7 — Extract foreign keys
+-----------------------------
 WHY: Foreign keys define relationships and referential integrity.
 WHAT IT DOES: Lists child-to-parent table relationships, including composite keys.
-OUTPUT: Save as foreign_key_inventory.csv.
+EXPECTED OUTPUT: Save as foreign_key_inventory.csv.
 
-COPILOT PROMPT:
+COPY-PASTE PROMPT:
+
+Task 7: Extract foreign keys.
+
 Write a read-only DB2 LUW SQL query using appropriate catalog views, such as SYSCAT.REFERENCES and SYSCAT.KEYCOLUSE, to extract foreign keys defined on tables in schema [SCHEMA_NAME]. Return source schema/table/constraint/column, referenced schema/table/column, and column position for composite keys. Include references to other schemas. Use supported catalog columns and verify the join logic. Do not modify anything. Show only the SQL and a short explanation, then stop.
 
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
+
 TASK 8 — Extract unique and check constraints
+---------------------------------------------
 WHY: These rules prevent duplicate values and enforce data validity.
 WHAT IT DOES: Inventories unique constraints and check expressions.
-OUTPUT: Save as constraint_inventory.csv.
+EXPECTED OUTPUT: Save as constraint_inventory.csv.
 
-COPILOT PROMPT:
+COPY-PASTE PROMPT:
+
+Task 8: Extract unique and check constraints.
+
 Write a read-only DB2 LUW query using appropriate catalog views to inventory unique constraints and check constraints defined on tables in schema [SCHEMA_NAME]. Return schema, table, constraint name, constraint type, key columns in correct order where applicable, and check definition where available. Do not assume zero rows means none exist; use catalog columns supported by my DB2 LUW version. Do not modify anything. Show only the SQL and a short explanation, then stop.
 
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
+
 TASK 9 — Diagnose empty constraint results
+------------------------------------------
 WHY: A blank query can mean no constraints, a bad filter, unsupported catalog columns, or insufficient metadata access.
 WHAT IT DOES: Checks constraint counts by type and helps validate the earlier query.
-OUTPUT: Diagnostic query and interpretation.
+EXPECTED OUTPUT: Diagnostic query and interpretation.
 
-COPILOT PROMPT:
+COPY-PASTE PROMPT:
+
+Task 9: Diagnose empty constraint results.
+
 My DB2 LUW constraint inventory query returned zero rows or only some constraint types. Help diagnose this with read-only SQL against the appropriate DB2 LUW catalog views. Show constraint counts by type for schema [SCHEMA_NAME], explain the DB2 constraint type codes, and verify the schema filter and catalog-column names. Do not modify anything. Show only the SQL and a short explanation, then stop.
 
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
+
 TASK 10 — Extract indexes
+-------------------------
 WHY: Indexes support queries and may enforce uniqueness.
 WHAT IT DOES: Lists index definitions and ordered columns.
-OUTPUT: Save as index_inventory.csv.
+EXPECTED OUTPUT: Save as index_inventory.csv.
 
-COPILOT PROMPT:
+COPY-PASTE PROMPT:
+
+Task 10: Extract indexes.
+
 Write a read-only DB2 LUW SQL query using appropriate catalog views, such as SYSCAT.INDEXES and SYSCAT.INDEXCOLUSE, to extract indexes for tables in schema [SCHEMA_NAME]. Return schema, table, index name, uniqueness indicator, indexed column names, column position, sort direction where available, and relevant index properties. Preserve composite index column order. Use supported catalog columns. Do not modify anything. Show only the SQL and a short explanation, then stop.
 
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
+
 TASK 11 — Extract views
+-----------------------
 WHY: Views may contain DB2-specific SQL that must be rewritten.
 WHAT IT DOES: Lists views and retrieves definitions where available.
-OUTPUT: Save as view_inventory.csv and preserve full definitions separately if needed.
+EXPECTED OUTPUT: Save as view_inventory.csv and preserve full definitions separately if needed.
 
-COPILOT PROMPT:
-Task 11: Extract all view definitions from my DB2 LUW schema.
+COPY-PASTE PROMPT:
+
+Task 11: Extract views.
 
 Write a read-only SQL query using the appropriate DB2 LUW system catalog views, such as SYSCAT.VIEWS.
 
@@ -143,13 +288,26 @@ Requirements:
 - Show only the SQL and a brief explanation.
 - Stop after completing this task.
 
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
+
 TASK 12 — Identify identity columns and sequences
+-------------------------------------------------
 WHY: Generated IDs must continue to work correctly after migration.
 WHAT IT DOES: Captures identity and sequence configuration where present.
-OUTPUT: Save as identity_inventory.csv and sequence_inventory.csv.
+EXPECTED OUTPUT: Save as identity_inventory.csv and sequence_inventory.csv.
 
-COPILOT PROMPT:
-Task 12: Inventory identity columns and sequences in my DB2 LUW schema.
+COPY-PASTE PROMPT:
+
+Task 12: Identify identity columns and sequences.
 
 Write read-only SQL queries using the appropriate DB2 LUW system catalog views.
 
@@ -180,13 +338,26 @@ Requirements:
 - Show only the SQL and a brief explanation.
 - Stop after this task.
 
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
+
 TASK 13 — Extract triggers
+--------------------------
 WHY: Triggers may run automatically when rows are inserted, updated, or deleted.
 WHAT IT DOES: Inventories trigger definitions, events, timing, and related tables.
-OUTPUT: Save as trigger_inventory.csv.
+EXPECTED OUTPUT: Save as trigger_inventory.csv.
 
-COPILOT PROMPT:
-Task 13: Inventory triggers in my DB2 LUW schema.
+COPY-PASTE PROMPT:
+
+Task 13: Extract triggers.
 
 Write a read-only SQL query using the appropriate DB2 LUW system catalog view, such as SYSCAT.TRIGGERS.
 
@@ -209,13 +380,26 @@ Requirements:
 - Show only the SQL and a brief explanation.
 - Stop after this task.
 
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
+
 TASK 14 — Extract stored procedures and functions
+-------------------------------------------------
 WHY: Routines contain business logic that may not be represented in table DDL.
 WHAT IT DOES: Inventories routines and retrieves definitions where accessible.
-OUTPUT: Save as routine_inventory.csv and preserve definitions separately if needed.
+EXPECTED OUTPUT: Save as routine_inventory.csv and preserve definitions separately if needed.
 
-COPILOT PROMPT:
-Task 14: Inventory stored procedures and functions in my DB2 LUW schema.
+COPY-PASTE PROMPT:
+
+Task 14: Extract stored procedures and functions.
 
 Write read-only SQL queries using the appropriate DB2 LUW system catalog views.
 
@@ -235,13 +419,26 @@ Requirements:
 - Show only the SQL and a brief explanation.
 - Stop after this task.
 
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
+
 TASK 15 — Identify object dependencies
+--------------------------------------
 WHY: Objects may depend on tables or routines in a specific creation order.
 WHAT IT DOES: Maps dependencies within the schema and references to other schemas.
-OUTPUT: Save as dependency_inventory.csv.
+EXPECTED OUTPUT: Save as dependency_inventory.csv.
 
-COPILOT PROMPT:
-Task 15: Identify dependencies among objects in my DB2 LUW schema.
+COPY-PASTE PROMPT:
+
+Task 15: Identify object dependencies.
 
 Write read-only SQL queries using appropriate DB2 LUW catalog views and supported dependency metadata.
 
@@ -260,13 +457,26 @@ Requirements:
 - Show only the SQL and a brief explanation.
 - Stop after this task.
 
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
+
 TASK 16 — Organize inventory reports
+------------------------------------
 WHY: A consistent inventory prevents objects and evidence from being lost.
 WHAT IT DOES: Proposes report filenames and a master migration tracker.
-OUTPUT: Inventory folder structure and master tracker specification.
+EXPECTED OUTPUT: Inventory folder structure and master tracker specification.
 
-COPILOT PROMPT:
-Task 16: Organize the inventory reports for my DB2 LUW to PostgreSQL schema migration.
+COPY-PASTE PROMPT:
+
+Task 16: Organize inventory reports.
 
 I have been extracting metadata from my DB2 LUW schema using DBeaver.
 
@@ -296,13 +506,26 @@ Show me the recommended folder structure and master tracker format. Stop after c
 PHASE 2 — ANALYSIS AND CONVERSION
 ==================================
 
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
+
 TASK 17 — Review DB2 data types
+-------------------------------
 WHY: DB2 and PostgreSQL types can differ in precision, behavior, or supported features.
 WHAT IT DOES: Proposes data type mappings and flags risky conversions.
-OUTPUT: Type mapping table and risk list.
+EXPECTED OUTPUT: Type mapping table and risk list.
 
-COPILOT PROMPT:
-Task 17: Analyze DB2 LUW data types and propose PostgreSQL equivalents.
+COPY-PASTE PROMPT:
+
+Task 17: Review DB2 data types.
 
 Use the column inventory for my DB2 LUW schema [SCHEMA_NAME].
 
@@ -324,13 +547,26 @@ Requirements:
 - Present a mapping table and explain important risks.
 - Stop after completing this task.
 
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
+
 TASK 18 — Identify SQL and identifier incompatibilities
+-------------------------------------------------------
 WHY: DB2-specific syntax and identifiers may fail in PostgreSQL.
 WHAT IT DOES: Creates an incompatibility and remediation list.
-OUTPUT: SQL/identifier exception report.
+EXPECTED OUTPUT: SQL/identifier exception report.
 
-COPILOT PROMPT:
-Task 18: Identify DB2 LUW to PostgreSQL SQL and identifier incompatibilities.
+COPY-PASTE PROMPT:
+
+Task 18: Identify SQL and identifier incompatibilities.
 
 Analyze the available source DDL and metadata for schema [SCHEMA_NAME].
 
@@ -351,13 +587,26 @@ Requirements:
 - Produce an exception list with recommended actions.
 - Stop after completing this task.
 
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
+
 TASK 19 — Review constraints and indexes
+----------------------------------------
 WHY: Structural rules and indexes must be represented correctly in the target.
 WHAT IT DOES: Identifies conversion risks and dependencies.
-OUTPUT: Constraint/index review report.
+EXPECTED OUTPUT: Constraint/index review report.
 
-COPILOT PROMPT:
-Task 19: Analyze the constraint and index inventories for my DB2 LUW schema [SCHEMA_NAME].
+COPY-PASTE PROMPT:
+
+Task 19: Review constraints and indexes.
 
 Review:
 1. Primary keys
@@ -379,13 +628,26 @@ Requirements:
 - Produce a structured review report.
 - Stop after completing this task.
 
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
+
 TASK 20 — Review views and routines
+-----------------------------------
 WHY: Views and routines often contain business logic and DB2-specific SQL.
 WHAT IT DOES: Classifies objects by conversion effort and risk.
-OUTPUT: View/routine compatibility report.
+EXPECTED OUTPUT: View/routine compatibility report.
 
-COPILOT PROMPT:
-Task 20: Review DB2 LUW views, triggers, stored procedures, and functions for PostgreSQL compatibility.
+COPY-PASTE PROMPT:
+
+Task 20: Review views and routines.
 
 Use the source definitions and dependency information available for schema [SCHEMA_NAME].
 
@@ -404,13 +666,26 @@ Requirements:
 - Do not execute or modify any database objects.
 - Produce a review report and stop.
 
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
+
 TASK 21 — Create conversion rules and exception report
+------------------------------------------------------
 WHY: Consistent rules avoid inconsistent table-by-table conversions.
 WHAT IT DOES: Defines mappings and records unresolved decisions.
-OUTPUT: Conversion rules and machine-readable exception report.
+EXPECTED OUTPUT: Conversion rules and machine-readable exception report.
 
-COPILOT PROMPT:
-Task 21: Create a proposed DB2 LUW to PostgreSQL conversion rules file and exception report for schema [SCHEMA_NAME].
+COPY-PASTE PROMPT:
+
+Task 21: Create conversion rules and exception report.
 
 Use the verified source inventory and approved compatibility findings.
 
@@ -437,13 +712,26 @@ Requirements:
 - Show the proposed formats and representative entries supported by available evidence.
 - Stop after completing this task.
 
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
+
 TASK 22 — Convert one sample table
+----------------------------------
 WHY: A reviewed example validates the mapping rules before bulk conversion.
 WHAT IT DOES: Converts one table definition only.
-OUTPUT: Proposed PostgreSQL DDL and conversion checklist.
+EXPECTED OUTPUT: Proposed PostgreSQL DDL and conversion checklist.
 
-COPILOT PROMPT:
-Task 22: Convert one DB2 LUW table definition into PostgreSQL-compatible DDL.
+COPY-PASTE PROMPT:
+
+Task 22: Convert one sample table.
 
 Use the source DDL and verified metadata I provide for one table in schema [SCHEMA_NAME].
 
@@ -466,13 +754,26 @@ Requirements:
 - Return the PostgreSQL DDL and a conversion checklist.
 - Stop after completing this task.
 
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
+
 TASK 23 — Review sample DDL
+---------------------------
 WHY: Catch mapping errors before applying the approach to all tables.
 WHAT IT DOES: Compares the sample PostgreSQL DDL with source evidence.
-OUTPUT: Review findings and corrected proposal where justified.
+EXPECTED OUTPUT: Review findings and corrected proposal where justified.
 
-COPILOT PROMPT:
-Task 23: Review the proposed PostgreSQL DDL for my sample table against the DB2 LUW source definition and metadata.
+COPY-PASTE PROMPT:
+
+Task 23: Review sample DDL.
 
 Check:
 1. Column names and order
@@ -491,13 +792,26 @@ Requirements:
 - Do not execute the DDL or modify any database objects.
 - Stop after completing this task.
 
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
+
 TASK 24 — Generate DDL for all tables
+-------------------------------------
 WHY: Automates repetitive table conversion using the reviewed rules.
 WHAT IT DOES: Produces PostgreSQL CREATE TABLE statements for the full in-scope inventory.
-OUTPUT: DDL files organized by schema/table and an exception report.
+EXPECTED OUTPUT: DDL files organized by schema/table and an exception report.
 
-COPILOT PROMPT:
-Task 24: Generate PostgreSQL CREATE TABLE DDL for all base tables in my DB2 LUW schema [SCHEMA_NAME].
+COPY-PASTE PROMPT:
+
+Task 24: Generate DDL for all tables.
 
 Use only the verified source inventory, approved conversion rules, and reviewed sample conversion.
 
@@ -515,13 +829,26 @@ Requirements:
 
 First show the generation plan and one representative output file for review. Stop after completing this task.
 
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
+
 TASK 25 — Generate constraints and index DDL
+--------------------------------------------
 WHY: The target must preserve source relationships and relevant indexing.
 WHAT IT DOES: Generates reviewed DDL for constraints and indexes.
-OUTPUT: Constraint and index DDL files.
+EXPECTED OUTPUT: Constraint and index DDL files.
 
-COPILOT PROMPT:
-Task 25: Generate PostgreSQL DDL for the approved constraints and indexes in my DB2 LUW schema migration.
+COPY-PASTE PROMPT:
+
+Task 25: Generate constraints and index DDL.
 
 Use the verified source inventories and approved conversion rules.
 
@@ -543,13 +870,26 @@ Requirements:
 - Do not execute the DDL.
 - Show the proposed output and stop after completing this task.
 
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
+
 TASK 26 — Convert remaining dependent objects
+---------------------------------------------
 WHY: Dependent objects may require rewrites and dependency-aware creation.
 WHAT IT DOES: Prepares PostgreSQL equivalents for verified views, sequences, triggers, and routines.
-OUTPUT: Proposed DDL and exception report.
+EXPECTED OUTPUT: Proposed DDL and exception report.
 
-COPILOT PROMPT:
-Task 26: Prepare PostgreSQL equivalents for the remaining dependent objects in my DB2 LUW schema migration.
+COPY-PASTE PROMPT:
+
+Task 26: Convert remaining dependent objects.
 
 Use verified source definitions, dependency information, and approved conversion rules.
 
@@ -574,227 +914,626 @@ Requirements:
 PHASE 3 — POSTGRESQL TARGET PREPARATION AND SCHEMA CREATION
 ==========================================================
 
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
+
 TASK 27 — Verify PostgreSQL connection
+--------------------------------------
 WHY: Prevent accidental execution against the wrong target.
 WHAT IT DOES: Verifies target database, server version, and user context.
-OUTPUT: Read-only target diagnostic results.
+EXPECTED OUTPUT: Read-only target diagnostic results.
 
-COPILOT PROMPT:
-Task 27: Help me verify my PostgreSQL connection in DBeaver and identify the target database, server/version, and current user/schema context. Do not expose secrets and do not modify anything. Provide read-only diagnostic SQL and explain how to confirm that this is the intended non-production target. Stop.
+COPY-PASTE PROMPT:
+
+Task 27: Verify PostgreSQL connection.
+
+
+
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
 
 TASK 28 — Confirm source-to-target mapping
+------------------------------------------
 WHY: Source names may need approved target schema/object names.
 WHAT IT DOES: Creates an explicit mapping instead of guessing target names.
-OUTPUT: Source-to-target mapping table.
+EXPECTED OUTPUT: Source-to-target mapping table.
 
-COPILOT PROMPT:
-Task 28: Help me create a source-to-target mapping for DB2 schema [SCHEMA_NAME] and its objects. Include source database/schema/object, target database/schema/object, object type, naming changes, reason, and approval status. Do not assume target names or rename objects automatically. Identify missing decisions and stop.
+COPY-PASTE PROMPT:
+
+Task 28: Confirm source-to-target mapping.
+
+
+
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
 
 TASK 29 — Review all generated DDL
+----------------------------------
 WHY: All generated SQL must be checked before execution.
 WHAT IT DOES: Finds missing objects, invalid syntax, and unresolved dependencies.
-OUTPUT: Pre-execution review checklist.
+EXPECTED OUTPUT: Pre-execution review checklist.
 
-COPILOT PROMPT:
-Task 29: Review all proposed PostgreSQL DDL files against the verified DB2 inventory and approved conversion rules. Check that every in-scope object is accounted for, dependency order is reasonable, names are valid, and unsupported conversions are documented. Do not execute anything. Produce a pre-execution checklist and blockers, then stop.
+COPY-PASTE PROMPT:
+
+Task 29: Review all generated DDL.
+
+
+
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
 
 TASK 30 — Prepare target schema creation
+----------------------------------------
 WHY: The target namespace must exist before creating its objects.
 WHAT IT DOES: Prepares CREATE SCHEMA SQL for review.
-OUTPUT: Proposed SQL; execution requires explicit approval.
+EXPECTED OUTPUT: Proposed SQL; execution requires explicit approval.
 
-COPILOT PROMPT:
-Task 30: Prepare the PostgreSQL CREATE SCHEMA statement for the approved target schema mapping. Show the exact SQL and explain any required permissions. Do not execute it automatically. Confirm that it will not affect the source DB2 database. Stop for explicit approval.
+COPY-PASTE PROMPT:
+
+Task 30: Prepare target schema creation.
+
+
+
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
 
 TASK 31 — Prepare one test table
+--------------------------------
 WHY: A single test verifies the target DDL before bulk creation.
 WHAT IT DOES: Prepares DDL for one approved sample table.
-OUTPUT: Proposed DDL and disposable-test cleanup plan.
+EXPECTED OUTPUT: Proposed DDL and disposable-test cleanup plan.
 
-COPILOT PROMPT:
-Task 31: Prepare PostgreSQL DDL for the approved sample table only, including approved columns and required basic constraints. Do not execute it. Show the exact SQL and a rollback/cleanup plan for a disposable test environment. Wait for my approval.
+COPY-PASTE PROMPT:
+
+Task 31: Prepare one test table.
+
+
+
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
 
 TASK 32 — Validate sample table structure
+-----------------------------------------
 WHY: Confirms actual target structure matches the source inventory.
 WHAT IT DOES: Compares PostgreSQL catalog metadata with DB2 metadata.
-OUTPUT: Sample-table mismatch report.
+EXPECTED OUTPUT: Sample-table mismatch report.
 
-COPILOT PROMPT:
-Task 32: After I create the sample table in PostgreSQL, provide read-only queries to inspect its actual columns, types, nullability, defaults, identity configuration, and constraints. Compare these with the DB2 source inventory and produce a mismatch report. Do not change anything. Stop after providing the validation steps.
+COPY-PASTE PROMPT:
+
+Task 32: Validate sample table structure.
+
+
+
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
 
 TASK 33 — Plan creation of remaining tables
+-------------------------------------------
 WHY: Tables must be created in a safe dependency-aware order.
 WHAT IT DOES: Produces an execution plan without running it.
-OUTPUT: Ordered creation plan and blockers.
+EXPECTED OUTPUT: Ordered creation plan and blockers.
 
-COPILOT PROMPT:
-Task 33: Prepare an execution plan for creating the remaining approved PostgreSQL tables in schema [TARGET_SCHEMA], respecting dependencies. Identify blockers and order objects safely. Do not execute SQL or make changes. Show the proposed order and wait for approval.
+COPY-PASTE PROMPT:
+
+Task 33: Plan creation of remaining tables.
+
+
+
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
 
 TASK 34 — Prepare constraint creation
+-------------------------------------
 WHY: Keys and checks enforce data integrity in the target.
 WHAT IT DOES: Prepares approved key and constraint DDL.
-OUTPUT: Proposed SQL and dependency/data-quality blockers.
+EXPECTED OUTPUT: Proposed SQL and dependency/data-quality blockers.
 
-COPILOT PROMPT:
-Task 34: Prepare PostgreSQL DDL for the approved primary keys, foreign keys, unique constraints, and check constraints. Consider creating foreign keys after data loading if that is the approved strategy. Identify invalid source data or dependency blockers. Do not execute anything. Show the DDL and wait for approval.
+COPY-PASTE PROMPT:
+
+Task 34: Prepare constraint creation.
+
+
+
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
 
 TASK 35 — Prepare index creation
+--------------------------------
 WHY: Target indexes should preserve intended uniqueness and query support.
 WHAT IT DOES: Prepares PostgreSQL index DDL for review.
-OUTPUT: Proposed index DDL.
+EXPECTED OUTPUT: Proposed index DDL.
 
-COPILOT PROMPT:
-Task 35: Prepare PostgreSQL DDL for the approved index inventory. Preserve indexed columns, order, and uniqueness where applicable. Flag index features that do not map directly to PostgreSQL. Do not execute anything. Show the DDL and wait for approval.
+COPY-PASTE PROMPT:
+
+Task 35: Prepare index creation.
+
+
+
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
 
 TASK 36 — Configure generated IDs
+---------------------------------
 WHY: Future generated IDs must not collide with already-loaded data.
 WHAT IT DOES: Prepares identity/sequence configuration based on verified metadata.
-OUTPUT: Proposed SQL and post-load reconciliation plan.
+EXPECTED OUTPUT: Proposed SQL and post-load reconciliation plan.
 
-COPILOT PROMPT:
-Task 36: Based on the verified DB2 identity/sequence inventory, prepare PostgreSQL identity or sequence configuration only for objects that actually require it. Explain how existing data and sequence values will be reconciled after loading. Do not assume an empty inventory means no generated IDs without verification. Do not execute anything. Show the proposed SQL and wait for approval.
+COPY-PASTE PROMPT:
+
+Task 36: Configure generated IDs.
+
+
+
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
 
 TASK 37 — Prepare dependent object creation
+-------------------------------------------
 WHY: Views, triggers, and routines may depend on tables or other routines.
 WHAT IT DOES: Prepares definitions in dependency order.
-OUTPUT: Proposed SQL and exception list.
+EXPECTED OUTPUT: Proposed SQL and exception list.
 
-COPILOT PROMPT:
-Task 37: Prepare PostgreSQL definitions for the approved views, triggers, procedures, and functions, respecting dependencies and documenting required rewrites. Do not create objects that are absent from the verified source inventory. Do not execute anything. Show the proposed definitions and wait for approval.
+COPY-PASTE PROMPT:
+
+Task 37: Prepare dependent object creation.
+
+
+
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
 
 TASK 38 — Review roles and permissions
+--------------------------------------
 WHY: Applications and users need the correct target access without excessive privileges.
 WHAT IT DOES: Proposes least-privilege role and grant mappings.
-OUTPUT: Permission mapping for DBA review.
+EXPECTED OUTPUT: Permission mapping for DBA review.
 
-COPILOT PROMPT:
-Task 38: Compare the approved DB2 security/ownership requirements with the intended PostgreSQL roles and grants. Propose a least-privilege role and permission mapping. Do not copy passwords or secrets, grant superuser privileges, or execute changes. List decisions requiring DBA approval and stop.
+COPY-PASTE PROMPT:
+
+Task 38: Review roles and permissions.
 
 PHASE 4 — DATA MIGRATION AND VALIDATION
 =======================================
 
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
+
 TASK 39 — Confirm data migration scope
+--------------------------------------
 WHY: Data movement method depends on size, consistency, and downtime needs.
 WHAT IT DOES: Establishes the data-loading scope and requirements.
-OUTPUT: Approved data migration plan inputs.
+EXPECTED OUTPUT: Approved data migration plan inputs.
 
-COPILOT PROMPT:
-Task 39: Help me define the data migration scope for schema [SCHEMA_NAME]. Identify which tables are in scope, expected volumes, downtime/consistency requirements, large tables, LOB columns, and whether a full load or incremental approach is required. Ask for missing facts instead of guessing. Do not access or change data. Stop.
+COPY-PASTE PROMPT:
+
+Task 39: Confirm data migration scope.
+
+
+
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
 
 TASK 40 — Capture source row counts
+-----------------------------------
 WHY: Source counts provide a baseline for reconciliation.
 WHAT IT DOES: Produces source table row counts and explains count limitations.
-OUTPUT: source_row_counts.csv.
+EXPECTED OUTPUT: source_row_counts.csv.
 
-COPILOT PROMPT:
-Task 40: Provide a safe plan and read-only DB2 LUW SQL to capture source row counts for all in-scope base tables in schema [SCHEMA_NAME]. Explain the difference between catalog statistics and exact COUNT(*) results. Do not modify data. Produce a report format and stop.
+COPY-PASTE PROMPT:
+
+Task 40: Capture source row counts.
+
+
+
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
 
 TASK 41 — Plan data loading
+---------------------------
 WHY: A controlled load reduces conversion errors and supports recovery.
 WHAT IT DOES: Defines loading, error handling, and restartability.
-OUTPUT: Approved data-load runbook.
+EXPECTED OUTPUT: Approved data-load runbook.
 
-COPILOT PROMPT:
-Task 41: Based on the approved migration method, prepare a controlled data-load plan for the approved PostgreSQL target. Include table order, encoding, NULL handling, date/time and decimal handling, LOBs, identity columns, error logs, restartability, and rollback. Do not run the load or expose secrets. Identify prerequisites and wait for approval.
+COPY-PASTE PROMPT:
+
+Task 41: Plan data loading.
+
+
+
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
 
 TASK 42 — Load data after approval
+----------------------------------
 WHY: Moves the approved source data to the target.
 WHAT IT DOES: Follows the approved load procedure without changing the source.
-OUTPUT: Load logs, row counts, and errors.
+EXPECTED OUTPUT: Load logs, row counts, and errors.
 
-COPILOT PROMPT:
-Task 42: Help me execute the already-approved DB2 LUW to PostgreSQL data-load procedure step by step. Before any action, show the command, target database, tables affected, and rollback/recovery method. Never modify or delete source data. Do not execute a step until I explicitly approve it. Capture logs, counts, and errors. Stop after each approved step.
+COPY-PASTE PROMPT:
+
+Task 42: Load data after approval.
+
+
+
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
 
 TASK 43 — Compare row counts
+----------------------------
 WHY: Detects missing or extra rows after loading.
 WHAT IT DOES: Compares exact source and target counts for mapped tables.
-OUTPUT: row_count_comparison.csv.
+EXPECTED OUTPUT: row_count_comparison.csv.
 
-COPILOT PROMPT:
-Task 43: Provide read-only SQL and a report format to compare exact source DB2 and target PostgreSQL row counts for every migrated table. Match source and target names using the approved mapping. Report source count, target count, difference, status, and errors. Do not claim success when a count is unavailable. Stop.
+COPY-PASTE PROMPT:
+
+Task 43: Compare row counts.
+
+
+
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
 
 TASK 44 — Compare data values
+-----------------------------
 WHY: Equal counts do not guarantee equal data.
 WHAT IT DOES: Defines key-based and column-level reconciliation.
-OUTPUT: Data comparison report and sample queries.
+EXPECTED OUTPUT: Data comparison report and sample queries.
 
-COPILOT PROMPT:
-Task 44: Design a data-validation approach for DB2 LUW versus PostgreSQL tables using primary/business keys, column-level comparisons, NULL-safe comparisons, decimal precision, dates/timestamps, strings, and LOBs where applicable. Include aggregates or hashes only where their limitations are documented. Do not modify data. Produce a validation plan and sample queries for one table, then stop.
+COPY-PASTE PROMPT:
+
+Task 44: Compare data values.
+
+
+
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
 
 TASK 45 — Validate keys and duplicates
+--------------------------------------
 WHY: Finds duplicate or invalid key values before relying on target constraints.
 WHAT IT DOES: Checks primary key and unique-rule behavior.
-OUTPUT: Key validation report.
+EXPECTED OUTPUT: Key validation report.
 
-COPILOT PROMPT:
-Task 45: Provide read-only checks to validate primary keys and unique constraints in the PostgreSQL target after data loading. Identify duplicate and NULL key values and compare the findings with DB2 source behavior. Use the approved table mapping. Do not modify data. Show the queries and report format, then stop.
+COPY-PASTE PROMPT:
+
+Task 45: Validate keys and duplicates.
+
+
+
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
 
 TASK 46 — Validate foreign keys
+-------------------------------
 WHY: Ensures child records reference valid parent records.
 WHAT IT DOES: Detects orphan records and verifies relationships.
-OUTPUT: Foreign-key validation report.
+EXPECTED OUTPUT: Foreign-key validation report.
 
-COPILOT PROMPT:
-Task 46: Provide read-only checks to validate foreign key relationships in PostgreSQL after loading. Identify orphan child records and compare source/target relationship definitions. Account for composite foreign keys and cross-schema references. Do not change data or constraints. Show the queries and report format, then stop.
+COPY-PASTE PROMPT:
+
+Task 46: Validate foreign keys.
+
+
+
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
 
 TASK 47 — Validate defaults and generated IDs
+---------------------------------------------
 WHY: Prevents incorrect defaults and future ID collisions.
 WHAT IT DOES: Checks default values, identity columns, and sequence state.
-OUTPUT: Generated-value validation report.
+EXPECTED OUTPUT: Generated-value validation report.
 
-COPILOT PROMPT:
-Task 47: Provide read-only checks to validate defaults, identity columns, and sequences in PostgreSQL after loading. Explain how to verify that future generated IDs will not collide with existing values. Use only verified source inventory and approved target mappings. Do not reset or alter sequences automatically. Show the checks and stop.
+COPY-PASTE PROMPT:
+
+Task 47: Validate defaults and generated IDs.
+
+
+
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
 
 TASK 48 — Validate views and routines
+-------------------------------------
 WHY: Objects can compile but still behave differently.
 WHAT IT DOES: Defines behavior tests for converted views and routines.
-OUTPUT: Functional test plan and evidence.
+EXPECTED OUTPUT: Functional test plan and evidence.
 
-COPILOT PROMPT:
-Task 48: Provide a test plan to validate converted PostgreSQL views, triggers, procedures, and functions against their DB2 source behavior. Include representative test cases, expected outputs, dependency checks, and limitations. Do not execute write operations or change objects. Stop after presenting the test plan.
+COPY-PASTE PROMPT:
+
+Task 48: Validate views and routines.
+
+
+
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
 
 TASK 49 — Resolve discrepancies
+-------------------------------
 WHY: All mismatches need an evidence-based resolution and retest.
 WHAT IT DOES: Categorizes issues and recommends safe corrective actions.
-OUTPUT: Issue register and retest plan.
+EXPECTED OUTPUT: Issue register and retest plan.
 
-COPILOT PROMPT:
-Task 49: Analyze the source-to-target validation report I provide. Group discrepancies by severity and root cause, identify likely causes supported by evidence, and propose the smallest safe corrective action for each. Do not make changes or assume missing evidence. Include retest steps and an issue tracker format. Stop.
+COPY-PASTE PROMPT:
+
+Task 49: Resolve discrepancies.
 
 PHASE 5 — FINAL REPORT AND SIGN-OFF
 ===================================
 
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
+
 TASK 50 — Generate final comparison report
+------------------------------------------
 WHY: Stakeholders need a consolidated view of migration quality.
 WHAT IT DOES: Summarizes inventory, conversion, validation, and outstanding issues.
-OUTPUT: Final comparison report.
+EXPECTED OUTPUT: Final comparison report.
 
-COPILOT PROMPT:
-Task 50: Using the verified inventory, approved mapping, conversion exceptions, and validation reports I provide, create a source-versus-target schema migration report. Include object counts by type, missing/unexpected objects, definition mismatches, data validation results, unresolved issues, and evidence references. Clearly distinguish verified results from assumptions. Do not invent results. Stop.
+COPY-PASTE PROMPT:
+
+Task 50: Generate final comparison report.
+
+
+
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
 
 TASK 51 — Confirm object coverage
+---------------------------------
 WHY: Confirms that every in-scope source object has been accounted for.
 WHAT IT DOES: Classifies source objects as matched, missing, unexpected, or requiring review.
-OUTPUT: Object coverage report.
+EXPECTED OUTPUT: Object coverage report.
 
-COPILOT PROMPT:
-Task 51: Compare the complete source inventory with the target inventory using the approved mapping. Identify every in-scope object as matched, missing, unexpected, or requiring manual review. Include tables, columns, keys, constraints, indexes, views, sequences, triggers, routines, and permissions where inventoried. Do not mark anything complete without evidence. Produce a coverage report and stop.
+COPY-PASTE PROMPT:
+
+Task 51: Confirm object coverage.
+
+
+
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
 
 TASK 52 — Document exceptions and risks
+---------------------------------------
 WHY: Approved differences and unresolved risks must be transparent.
 WHAT IT DOES: Consolidates defects, decisions, risks, and workarounds.
-OUTPUT: Exception register.
+EXPECTED OUTPUT: Exception register.
 
-COPILOT PROMPT:
-Task 52: Compile all approved differences, unresolved defects, unsupported conversions, operational risks, and manual workarounds for this DB2 LUW to PostgreSQL migration. Include impact, owner, decision, approval, and retest evidence where known. Do not invent owners or approvals. Produce an exception register and stop.
+COPY-PASTE PROMPT:
+
+Task 52: Document exceptions and risks.
+
+
+
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
 
 TASK 53 — Prepare sign-off checklist
+------------------------------------
 WHY: Migration should not be declared complete without evidence and approvals.
 WHAT IT DOES: Produces a final technical and operational readiness checklist.
-OUTPUT: Sign-off checklist.
+EXPECTED OUTPUT: Sign-off checklist.
 
-COPILOT PROMPT:
-Task 53: Prepare a final technical sign-off checklist for this DB2 LUW to PostgreSQL schema migration. Cover object coverage, DDL correctness, dependencies, permissions, data reconciliation, application compatibility, performance smoke tests, backups, rollback readiness, unresolved exceptions, and stakeholder approvals. Mark items as pending unless supporting evidence is provided. Do not claim the migration is complete without evidence. Stop.
+COPY-PASTE PROMPT:
+
+Task 53: Prepare sign-off checklist.
 
 MASTER MIGRATION TRACKER — SUGGESTED COLUMNS
 ============================================
@@ -830,3 +1569,14 @@ If a catalog query returns blank:
 7. Record "verified absent" only after the query and scope are validated.
 
 END OF PLAYBOOK
+
+Requirements:
+- Use verified source definitions, inventory results, dependency information, and approved conversion rules relevant to this task.
+- Do not invent missing definitions or assume that blank query results prove an object is absent; flag uncertainty and explain verification needed.
+- Do not execute SQL or modify databases/files unless this task explicitly asks for a file artifact; present proposed SQL for review only.
+- Identify unsupported or ambiguous items and list them in an exception/manual-review section where applicable.
+- Return the task-specific deliverable and a concise explanation of what it means.
+- Do not perform later tasks or make unrelated changes.
+- Stop after completing this task.
+
+==========================================================
